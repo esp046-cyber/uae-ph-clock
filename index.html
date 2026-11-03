@@ -16,58 +16,51 @@
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<!-- Replace YOUR-USER and YOUR-REPO with your GitHub Pages address (see README) -->
+<link rel="canonical" href="https://esp046-cyber.github.io/uae-ph-clock/">
+<meta property="og:site_name" content="UAE–PH Clock">
+<meta property="og:image:alt" content="Two analog clocks showing Dubai and Manila time">
+<meta name="twitter:image:alt" content="Two analog clocks showing Dubai and Manila time">
 <meta property="og:type" content="website">
 <meta property="og:title" content="UAE–PH Clock">
 <meta property="og:description" content="Dubai and Manila time, side by side. Install it, use it offline.">
-<meta property="og:url" content="https://YOUR-USER.github.io/YOUR-REPO/">
-<meta property="og:image" content="https://YOUR-USER.github.io/YOUR-REPO/assets/og-image.png">
+<meta property="og:url" content="https://esp046-cyber.github.io/uae-ph-clock/">
+<meta property="og:image" content="https://esp046-cyber.github.io/uae-ph-clock/assets/og-image.png?v=2">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="UAE–PH Clock">
 <meta name="twitter:description" content="Dubai and Manila time, side by side.">
-<meta name="twitter:image" content="https://YOUR-USER.github.io/YOUR-REPO/assets/og-image.png">
-<script>try{var s=JSON.parse(localStorage.getItem("uaeph")||"{}");document.documentElement.dataset.theme=s.theme||"dunes";document.documentElement.dataset.h24=s.h24?"1":"0"}catch(e){document.documentElement.dataset.theme="dunes"}</script>
+<meta name="twitter:image" content="https://esp046-cyber.github.io/uae-ph-clock/assets/og-image.png?v=2">
+<script>try{var s=JSON.parse(localStorage.getItem("uaeph")||"{}");document.documentElement.dataset.theme=s.theme||"dunes";document.documentElement.dataset.view=s.view||"side";document.documentElement.dataset.h24=s.h24?"1":"0"}catch(e){document.documentElement.dataset.theme="dunes"}</script>
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <main>
-  <header class="top">
-    <h1>UAE–PH Clock</h1>
-    <p id="diff" class="diff" aria-live="polite"></p>
-  </header>
-  <section class="clocks">
-    <article class="card" id="ae" data-tz="Asia/Dubai" aria-labelledby="ae-n">
-      <h2 id="ae-n">UAE <small>Dubai · GST UTC+4</small></h2>
-      <svg class="dial" viewBox="0 0 200 200" role="img" aria-label="Analog clock, UAE"></svg>
-      <p class="digital" aria-live="off"></p>
-      <p class="date"></p><p class="badge"></p>
-    </article>
-    <article class="card" id="ph" data-tz="Asia/Manila" aria-labelledby="ph-n">
-      <h2 id="ph-n">Philippines <small>Manila · PHT UTC+8</small></h2>
-      <svg class="dial" viewBox="0 0 200 200" role="img" aria-label="Analog clock, Philippines"></svg>
-      <p class="digital" aria-live="off"></p>
-      <p class="date"></p><p class="badge"></p>
-    </article>
-  </section>
+  <header class="top"><h1>UAE–PH Clock</h1>
+    <p id="diff" class="pill" aria-live="polite"></p><p id="overlap" class="pill sub"></p></header>
+  <section id="clocks" class="clocks" aria-label="World clocks"></section>
+  <details id="planner" class="planner"><summary>Meeting planner</summary>
+    <label for="slider">Drag to pick a time in your first city</label>
+    <input id="slider" type="range" min="0" max="1425" step="15" value="720">
+    <ul id="sOut" aria-live="polite"></ul><button id="sNow">Reset to now</button></details>
   <div id="installBanner" class="banner" hidden><span id="installMsg">Install this clock on your device.</span><button id="installBtn">Install</button><button id="installX" aria-label="Dismiss">×</button></div>
 </main>
 <nav class="bar" aria-label="Controls">
+  <button id="view">Side-by-Side (Compact)</button>
+  <button id="add">+ Add / Change City</button>
+  <button id="plan">Planner</button>
   <button id="fmt" aria-pressed="false">12h / 24h</button>
   <label class="sel">Theme
-    <select id="theme">
-      <option value="dunes">Sunset Dunes</option><option value="azure">Tropical Azure</option>
-      <option value="neon">Cyberpunk Neon</option><option value="glass">Frosted Glass</option>
-      <option value="swiss">Swiss Minimal</option><option value="sun">Direct Sunlight</option>
-      <option value="amoled">AMOLED Black</option>
-    </select></label>
+    <select id="theme"><option value="dunes">Sunset Dunes</option><option value="azure">Tropical Azure</option><option value="neon">Cyberpunk Neon</option><option value="glass">Frosted Glass</option><option value="swiss">Swiss Minimal</option><option value="sun">Direct Sunlight</option><option value="amoled">AMOLED Black</option></select></label>
   <button id="wake" aria-pressed="false">Keep awake</button>
   <button id="share">Share</button>
   <button id="help">Add to Home Screen</button>
 </nav>
+<dialog id="cityDlg"><h3>Choose a city</h3><p id="cityHint" class="hint"></p>
+  <input id="q" type="search" placeholder="Search city or country" aria-label="Search cities" autocomplete="off">
+  <ul id="cityList"></ul><button id="cityX">Close</button></dialog>
 <dialog id="dlg"><h3>Add to your iPhone Home Screen</h3>
 <ol><li>Open this page in <b>Safari</b>.</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Open it from the Home Screen. It runs full screen and works offline.</li></ol>
-<p><b>StandBy:</b> turn on <i>Settings → StandBy</i>, then charge your iPhone sideways. Use <i>Keep awake</i> in this app for a desk clock. Widgets are not available to web apps.</p>
+<p><b>StandBy:</b> turn on <i>Settings → StandBy</i>, then charge your iPhone sideways. Use <i>Keep awake</i> for a desk clock.</p>
 <p><b>Android / desktop Chrome:</b> use the Install button when it appears, or the browser menu.</p>
 <button id="dlgx">Got it</button></dialog>
 <div id="toast" role="status"></div>
